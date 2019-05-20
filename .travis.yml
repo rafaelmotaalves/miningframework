@@ -1,0 +1,7 @@
+language: groovy
+
+script:
+  - groovy -cp "src" src/test/TestSuite.groovy
+
+jdk:
+  - oraclejdk8
