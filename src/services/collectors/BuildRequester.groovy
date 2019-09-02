@@ -1,4 +1,4 @@
-package services
+package services.collectors
 
 import main.interfaces.DataCollector
 import main.project.*
@@ -8,6 +8,8 @@ import main.util.ProcessRunner
 import main.exception.TravisHelperException
 import main.util.FileManager
 import static main.app.MiningFramework.arguments
+
+import services.*
 
 class BuildRequester implements DataCollector {
 

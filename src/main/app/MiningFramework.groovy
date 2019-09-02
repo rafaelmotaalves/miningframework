@@ -1,6 +1,5 @@
 package main.app
 
-@Grab('com.google.inject:guice:4.2.2')
 import com.google.inject.*
 import java.io.File
 import java.util.ArrayList
@@ -37,45 +36,9 @@ class MiningFramework {
         this.outputProcessor = outputProcessor
     }
 
-    static main(args) {
-        ArgsParser argsParser = new ArgsParser()
-        try {
-            Arguments appArguments = argsParser.parse(args)
-            
-            if (appArguments.isHelp()) {
-                argsParser.printHelp()
-            } else {
-                Class injectorClass = appArguments.getInjector()
-                Injector injector = Guice.createInjector(injectorClass.newInstance())
-                MiningFramework framework = injector.getInstance(MiningFramework.class)
-
-                framework.setArguments(appArguments)
-
-                FileManager.createOutputFiles(appArguments.getOutputPath(), appArguments.isPushCommandActive())
-            
-                printStartAnalysis()                
-
-                String inputPath = arguments.getInputPath()
-                
-                ArrayList<Project> projectList = InputParser.getProjectList(inputPath)
-
-                framework.setProjectList(projectList)
-                framework.start()
-
-                printFinishAnalysis()
-
-                runPostScript()
-            }
-    
-        } catch (InvalidArgsException e) {
-            println e.message
-            println 'Run the miningframework with --help to see the possible arguments'
-        } catch (UnstagedChangesException | UnexpectedPostScriptException | NoAccessKeyException e) {
-            println e.message
-        }
-    }
-
     public void start() {
+        printStartAnalysis()
+
         projectList = processProjects(projectList)
 
         BlockingQueue<Project> projectQueue = populateProjectsQueue(projectList)
@@ -85,6 +48,8 @@ class MiningFramework {
         waitForMiningWorkers(workers)
 
         processOutput()
+
+        printFinishAnalysis()
     }
 
     BlockingQueue<Project> populateProjectsQueue(List<Project> projectList) {

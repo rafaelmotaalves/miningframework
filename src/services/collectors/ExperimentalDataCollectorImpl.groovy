@@ -1,4 +1,4 @@
-package services
+package services.collectors
 
 import main.interfaces.DataCollector
 import java.util.regex.Pattern
@@ -9,6 +9,7 @@ import static main.app.MiningFramework.arguments
 import main.util.*
 import main.project.*
 
+import services.modifiedlines.*
 
 class ExperimentalDataCollectorImpl implements DataCollector {
 

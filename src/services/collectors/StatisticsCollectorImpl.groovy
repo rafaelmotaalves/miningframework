@@ -1,4 +1,4 @@
-package services
+package services.collectors
 import main.interfaces.DataCollector
 
 import java.text.SimpleDateFormat
@@ -11,6 +11,8 @@ import main.util.*
 import main.project.*
 import java.util.regex.Pattern
 import java.util.regex.Matcher
+
+import services.*
 
 class StatisticsCollectorImpl implements DataCollector {
 

@@ -5,6 +5,10 @@ import main.interfaces.CommitFilter
 import main.interfaces.ProjectProcessor
 import main.interfaces.OutputProcessor
 
+import services.collectors.*
+import services.filters.*
+import services.processors.*
+
 @Grab('com.google.inject:guice:4.2.2')
 import com.google.inject.*
 import com.google.inject.multibindings.Multibinder

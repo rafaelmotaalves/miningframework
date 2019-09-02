@@ -1,10 +1,12 @@
-package services
+package services.filters
+
 import main.interfaces.CommitFilter
 import static com.xlson.groovycsv.CsvParser.parseCsv
 
 import main.util.*
 import main.project.*
 
+import services.modifiedlines.*
 
 class CommitFilterImpl implements CommitFilter {
 

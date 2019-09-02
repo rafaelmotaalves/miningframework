@@ -1,5 +1,6 @@
-package services
+package services.modifiedlines
 
+import services.collectors.*
 
 public class ModifiedLine {
 

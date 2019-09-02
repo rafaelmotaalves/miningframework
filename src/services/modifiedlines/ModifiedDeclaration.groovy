@@ -1,4 +1,4 @@
-package services
+package services.modifiedlines
 
 class ModifiedDeclaration {
     private String signature
