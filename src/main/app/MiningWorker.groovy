@@ -33,39 +33,55 @@ class MiningWorker implements Runnable {
 
     void run () {
         while (!projectList.isEmpty()) {
-            try {
-                Project project = projectList.remove()
+            Project project = getProject()
 
+            if (project != null) {
                 printProjectInformation (project)
 
-                if (project.isRemote()) {
-                    cloneRepository(project, "${baseDir}/${project.getName()}")
-                } else {
-                    checkForUnstagedChanges(project);
-                }
-
-                // Since date and until date as arguments (dd/mm/yyyy).
-                List<MergeCommit> mergeCommits = project.getMergeCommits(arguments.getSinceDate(), arguments.getUntilDate()) 
-                for (mergeCommit in mergeCommits) {
-                    if (applyFilter(project, mergeCommit)) {
-                        printMergeCommitInformation(project, mergeCommit)
-
-                        runDataCollectors(project, mergeCommit)
+                try {
+                    if (project.isRemote()) {
+                        cloneRepository(project, "${baseDir}/${project.getName()}")
+                    } else {
+                        checkForUnstagedChanges(project);
                     }
+
+                        // Since date and until date as arguments (dd/mm/yyyy).
+                    List<MergeCommit> mergeCommits = project.getMergeCommits(arguments.getSinceDate(), arguments.getUntilDate()) 
+                    for (mergeCommit in mergeCommits) {
+                        if (applyFilter(project, mergeCommit)) {
+                            printMergeCommitInformation(project, mergeCommit)
+
+                            runDataCollectors(project, mergeCommit)
+                        }
+                    }
+
+                    if(arguments.isPushCommandActive()) // Will push.
+                        pushResults(project, arguments.getResultsRemoteRepositoryURL())
+
+                    if (!arguments.getKeepProjects()) {
+                        FileManager.delete(new File(project.getPath()))
+                    }
+                } catch (Exception error) {
+                    println "Error procesing ${project.getName()}"
+                    error.printStackTrace()
                 }
 
-                if(arguments.isPushCommandActive()) // Will push.
-                    pushResults(project, arguments.getResultsRemoteRepositoryURL())
 
-                if (!arguments.getKeepProjects()) {
-                    FileManager.delete(new File(project.getPath()))
-                }
-
-                endProjectAnalysis (project)
-            } catch (NoSuchElementException e) {
             }
+
+            endProjectAnalysis (project)
         }
     } 
+
+    private Project getProject() {
+        Project project = null
+        try {
+            project = projectList.remove()
+        } catch (NoSuchElementException e) {
+        } finally {
+            return project
+        }
+    }
 
     private void runDataCollectors(Project project, MergeCommit mergeCommit) {
         for (dataCollector in dataCollectors) {
